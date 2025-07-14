@@ -21,7 +21,7 @@ export default function Board({ size }: { size: number }) {
     const newBoard: Board = []
     for (let row = 0; row < size; row++) {
       newBoard[row] = []
-      for (let col = 0; row < size; col++) {
+      for (let col = 0; col < size; col++) {
         newBoard[row][col] = {
           isMine: false,
           isRevealed: false,
