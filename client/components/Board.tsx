@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import Cell from './Cell'
 
 interface CellData {
@@ -10,6 +11,12 @@ interface CellData {
 type Board = CellData[][]
 
 export default function Board({ size }: { size: number }) {
+  const [board, setBoard] = useState<Board>([])
+
+  useEffect(() => {
+    createBoard()
+  }, [size])
+
   function createBoard() {
     const newBoard: Board = []
     for (let row = 0; row < size; row++) {
@@ -23,11 +30,10 @@ export default function Board({ size }: { size: number }) {
         }
       }
     }
-    return newBoard
+    setBoard(newBoard)
   }
 
-  const testArr = new Array(size * size).fill(0)
-  return testArr.map((arr, i) => {
+  return board.map((arr, i) => {
     return <Cell key={i} />
   })
 }
