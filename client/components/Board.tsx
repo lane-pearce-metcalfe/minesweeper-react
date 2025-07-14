@@ -33,9 +33,20 @@ export default function Board({ size }: { size: number }) {
     setBoard(newBoard)
   }
 
-  return board.map((row, i) => {
-    return row.map((cell, j) => {
-      return <Cell key={`${i}-${j}`} />
-    })
-  })
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${size}, 1fr)`,
+        height: '60vh',
+        aspectRatio: '1/1',
+      }}
+    >
+      {board.map((row, i) => {
+        return row.map((cell, j) => {
+          return <Cell key={`${i}-${j}`} />
+        })
+      })}
+    </div>
+  )
 }
