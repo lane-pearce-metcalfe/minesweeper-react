@@ -33,7 +33,9 @@ export default function Board({ size }: { size: number }) {
     setBoard(newBoard)
   }
 
-  return board.map((arr, i) => {
-    return <Cell key={i} />
+  return board.map((row, i) => {
+    return row.map((cell, j) => {
+      return <Cell key={`${i}-${j}`} />
+    })
   })
 }
