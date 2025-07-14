@@ -1,3 +1,8 @@
+import Cell from './Cell'
+
 export default function Board({ size }: { size: number }) {
-  return <p>Testing...</p>
+  const testArr = new Array(size * size)
+  return testArr.map((arr, i) => {
+    return <Cell key={i} />
+  })
 }
