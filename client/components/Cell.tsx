@@ -14,6 +14,7 @@ export default function Cell() {
         borderRight: '3px solid black',
         borderTop: '3px solid white',
         borderLeft: '3px solid white',
+        cursor: 'pointer',
       }}
     >
       <p style={{ margin: '0' }}>1</p>
