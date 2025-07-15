@@ -62,8 +62,8 @@ export default function Board({
       for (let col = 0; col < size; col++) {
         if (!countedBoard[row][col].isMine) {
           let count = 0
-          for (let nearbyRow = -1; nearbyRow < 1; nearbyRow++) {
-            for (let nearbyCol = -1; nearbyCol < 1; nearbyCol++) {
+          for (let nearbyRow = -1; nearbyRow <= 1; nearbyRow++) {
+            for (let nearbyCol = -1; nearbyCol <= 1; nearbyCol++) {
               const checkRow = row + nearbyRow
               const checkCol = col + nearbyCol
               if (
