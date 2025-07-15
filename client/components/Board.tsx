@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Cell from './Cell'
 
 interface CellData {
@@ -17,7 +17,7 @@ export default function Board({ size }: { size: number }) {
     createBoard()
   }, [size])
 
-  function createBoard() {
+  const createBoard = useCallback(() => {
     const newBoard: Board = []
     for (let row = 0; row < size; row++) {
       newBoard[row] = []
@@ -31,8 +31,7 @@ export default function Board({ size }: { size: number }) {
       }
     }
     setBoard(newBoard)
-  }
-
+  }, [])
   return (
     <div
       style={{
