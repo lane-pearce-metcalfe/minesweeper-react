@@ -1,11 +1,21 @@
 import { CellData } from './Board'
 
 export default function Cell({ cell }: { cell: CellData }) {
+  const colors = [
+    'blue',
+    'green',
+    'orange',
+    'darkblue',
+    'red',
+    'navy',
+    'purple',
+    'black',
+  ]
   return (
     <div
       style={{
         backgroundColor: 'lightgray',
-        color: 'blue',
+        color: colors[cell.nearbyMines - 1],
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
