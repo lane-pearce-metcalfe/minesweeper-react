@@ -46,8 +46,11 @@ export default function Board({
     while (minesPlaced < mines) {
       const row = Math.floor(Math.random() * size)
       const col = Math.floor(Math.random() * size)
-      minedBoard[row][col].isMine = true
-      minesPlaced++
+
+      if (!minedBoard[row][col].isMine) {
+        minedBoard[row][col].isMine = true
+        minesPlaced++
+      }
     }
 
     return minedBoard
