@@ -20,7 +20,7 @@ export default function Board({
   const [board, setBoard] = useState<Board>([])
 
   useEffect(() => {
-    setBoard(placeMines())
+    setBoard(countNearbyBombs())
   }, [size])
 
   const createBoard = useCallback((): Board => {
