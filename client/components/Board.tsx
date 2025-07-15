@@ -17,6 +17,7 @@ export default function Board({
   size: number
   mines: number
 }) {
+  const [gameState, setGameState] = useState('playing')
   const [board, setBoard] = useState<Board>([])
 
   useEffect(() => {
