@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Cell from './Cell'
 
-interface CellData {
+export interface CellData {
   isMine: boolean
   isRevealed: boolean
   isFlagged: boolean
