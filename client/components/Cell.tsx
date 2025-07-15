@@ -29,7 +29,15 @@ export default function Cell({ cell }: { cell: CellData }) {
         cursor: 'pointer',
       }}
     >
-      <p style={{ margin: '0' }}>{cell.nearbyMines}</p>
+      {cell.nearbyMines ? (
+        <p style={{ margin: '0' }}>{cell.nearbyMines}</p>
+      ) : (
+        <img
+          src="client/images/bomb.png"
+          alt="minesweeper bomb"
+          style={{ width: '80%' }}
+        />
+      )}
     </div>
   )
 }
