@@ -53,6 +53,33 @@ export default function Board({
     return minedBoard
   }, [])
 
+  const countNearbyBombs = useCallback((): Board => {
+    const countedBoard = placeMines()
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
+        if (!countedBoard[row][col].isMine) {
+          let count = 0
+          for (let nearbyRow = -1; nearbyRow < 1; nearbyRow++) {
+            for (let nearbyCol = -1; nearbyCol < 1; nearbyCol) {
+              const checkRow = row + nearbyRow
+              const checkCol = col + nearbyCol
+              if (
+                checkRow >= 0 &&
+                checkRow < size &&
+                checkCol >= 0 &&
+                checkCol < size
+              ) {
+                if (countedBoard[checkRow][checkCol].isMine) count++
+              }
+            }
+          }
+          countedBoard[row][col].nearbyMines = count
+        }
+      }
+    }
+    return countedBoard
+  }, [])
+
   return (
     <div
       style={{
