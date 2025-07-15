@@ -19,7 +19,7 @@ export default function Cell(cell: CellData) {
         cursor: 'pointer',
       }}
     >
-      <p style={{ margin: '0' }}>1</p>
+      <p style={{ margin: '0' }}>{cell.nearbyMines}</p>
     </div>
   )
 }
