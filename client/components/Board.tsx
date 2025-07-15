@@ -5,7 +5,7 @@ interface CellData {
   isMine: boolean
   isRevealed: boolean
   isFlagged: boolean
-  nearbyMines: boolean
+  nearbyMines: number
 }
 
 type Board = CellData[][]
