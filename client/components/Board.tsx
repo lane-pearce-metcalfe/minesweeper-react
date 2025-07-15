@@ -81,7 +81,6 @@ export default function Board({
         }
       }
     }
-    console.log(countedBoard)
     return countedBoard
   }, [])
 
