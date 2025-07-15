@@ -95,7 +95,7 @@ export default function Board({
     >
       {board.map((row, i) => {
         return row.map((cell, j) => {
-          return <Cell key={`${i}-${j}`} />
+          return <Cell cell={cell} key={`${i}-${j}`} />
         })
       })}
     </div>

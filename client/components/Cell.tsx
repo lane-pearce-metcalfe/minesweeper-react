@@ -1,6 +1,6 @@
 import { CellData } from './Board'
 
-export default function Cell(cell: CellData) {
+export default function Cell({ cell }: { cell: CellData }) {
   return (
     <div
       style={{
