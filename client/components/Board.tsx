@@ -32,7 +32,7 @@ export default function Board({
           isMine: false,
           isRevealed: false,
           isFlagged: false,
-          nearbyMines: false,
+          nearbyMines: 0,
         }
       }
     }
