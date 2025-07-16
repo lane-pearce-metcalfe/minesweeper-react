@@ -84,6 +84,35 @@ export default function Board({
     return countedBoard
   }, [])
 
+  const handleCellClick = useCallback((row: number, col: number): void => {
+    if (gameState !== 'playing') return
+
+    setBoard((prevBoard) => {
+      const newBoard: Board = prevBoard.map((row) =>
+        row.map((cell) => ({ ...cell })),
+      )
+      const cell = newBoard[row][col]
+
+      if (cell.isFlagged || cell.isRevealed) return prevBoard
+
+      if (cell.isMine) {
+        for (let row = 0; row < size; row++) {
+          for (let col = 0; col < size; col++) {
+            if (newBoard[row][col].isMine) {
+              newBoard[row][col].isRevealed = true
+            }
+          }
+        }
+        setGameState('lost')
+        return newBoard
+      }
+
+      newBoard[row][col].isRevealed = true
+
+      return newBoard
+    })
+  }, [])
+
   return (
     <div
       style={{
