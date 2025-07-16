@@ -1,6 +1,12 @@
 import { CellData } from './Board'
 
-export default function Cell({ cell }: { cell: CellData }) {
+export function Cell({
+  cell,
+  onClick,
+}: {
+  cell: CellData
+  onClick: () => void
+}) {
   const colors = [
     'blue',
     'green',
@@ -12,7 +18,9 @@ export default function Cell({ cell }: { cell: CellData }) {
     'black',
   ]
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
+      onClick={onClick}
       style={{
         backgroundColor: 'lightgray',
         color: colors[cell.nearbyMines - 1],

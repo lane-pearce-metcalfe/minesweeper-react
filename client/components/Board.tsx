@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import Cell from './Cell'
+import { Cell } from './Cell'
 
 export interface CellData {
   isMine: boolean
@@ -124,7 +124,13 @@ export default function Board({
     >
       {board.map((row, i) => {
         return row.map((cell, j) => {
-          return <Cell cell={cell} key={`${i}-${j}`} />
+          return (
+            <Cell
+              cell={cell}
+              key={`${i}-${j}`}
+              onClick={() => handleCellClick(i, j)}
+            />
+          )
         })
       })}
     </div>
