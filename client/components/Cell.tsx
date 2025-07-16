@@ -37,7 +37,7 @@ export function Cell({
         cursor: 'pointer',
       }}
     >
-      {!cell.isRevealed ? null : cell.nearbyMines ? (
+      {!cell.isRevealed ? null : !cell.isMine ? (
         <p style={{ margin: '0' }}>{cell.nearbyMines}</p>
       ) : (
         <img

@@ -3,7 +3,7 @@ import Board from './Board'
 function App() {
   return (
     <div>
-      <Board size={8} mines={20} />
+      <Board size={10} mines={10} />
     </div>
   )
 }

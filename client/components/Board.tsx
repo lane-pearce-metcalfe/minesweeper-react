@@ -17,11 +17,14 @@ export default function Board({
   size: number
   mines: number
 }) {
+  const [firstClick, setFirstClick] = useState(true)
   const [gameState, setGameState] = useState('playing')
   const [board, setBoard] = useState<Board>([])
 
   useEffect(() => {
-    setBoard(countNearbyBombs())
+    setBoard(createBoard())
+    setFirstClick(true)
+    setGameState('playing')
   }, [size])
 
   const createBoard = useCallback((): Board => {
@@ -38,80 +41,169 @@ export default function Board({
       }
     }
     return newBoard
-  }, [])
+  }, [size])
 
-  const placeMines = useCallback((): Board => {
-    const minedBoard = createBoard()
-    let minesPlaced = 0
+  function isInAvoidList(
+    row: number,
+    col: number,
+    avoidCells: [number, number][],
+  ): boolean {
+    return avoidCells.some(
+      ([avoidRow, avoidCol]) => avoidRow === row && avoidCol === col,
+    )
+  }
 
-    while (minesPlaced < mines) {
-      const row = Math.floor(Math.random() * size)
-      const col = Math.floor(Math.random() * size)
+  const placeMines = useCallback(
+    (board: Board, clickRow: number, clickCol: number): Board => {
+      const minedBoard = board.map((row) => row.map((cell) => ({ ...cell })))
+      let minesPlaced = 0
 
-      if (!minedBoard[row][col].isMine) {
-        minedBoard[row][col].isMine = true
-        minesPlaced++
+      const avoidCells: [number, number][] = []
+
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          const newRow = clickRow + i
+          const newCol = clickCol + j
+          if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
+            avoidCells.push([newRow, newCol])
+          }
+        }
       }
-    }
 
-    return minedBoard
-  }, [])
+      while (minesPlaced < mines) {
+        const row = Math.floor(Math.random() * size)
+        const col = Math.floor(Math.random() * size)
 
-  const countNearbyBombs = useCallback((): Board => {
-    const countedBoard = placeMines()
-    for (let row = 0; row < size; row++) {
-      for (let col = 0; col < size; col++) {
-        if (!countedBoard[row][col].isMine) {
-          let count = 0
-          for (let nearbyRow = -1; nearbyRow <= 1; nearbyRow++) {
-            for (let nearbyCol = -1; nearbyCol <= 1; nearbyCol++) {
-              const checkRow = row + nearbyRow
-              const checkCol = col + nearbyCol
-              if (
-                checkRow >= 0 &&
-                checkRow < size &&
-                checkCol >= 0 &&
-                checkCol < size
-              ) {
-                if (countedBoard[checkRow][checkCol].isMine) count++
+        if (
+          !minedBoard[row][col].isMine &&
+          !isInAvoidList(row, col, avoidCells)
+        ) {
+          minedBoard[row][col].isMine = true
+          minesPlaced++
+        }
+      }
+
+      return minedBoard
+    },
+    [mines, size],
+  )
+
+  const countNearbyMines = useCallback(
+    (board: Board): Board => {
+      const countedBoard = board.map((row) => row.map((cell) => ({ ...cell })))
+
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+          if (!countedBoard[row][col].isMine) {
+            let count = 0
+            for (let nearbyRow = -1; nearbyRow <= 1; nearbyRow++) {
+              for (let nearbyCol = -1; nearbyCol <= 1; nearbyCol++) {
+                const checkRow = row + nearbyRow
+                const checkCol = col + nearbyCol
+                if (
+                  checkRow >= 0 &&
+                  checkRow < size &&
+                  checkCol >= 0 &&
+                  checkCol < size
+                ) {
+                  if (countedBoard[checkRow][checkCol].isMine) count++
+                }
               }
             }
+            countedBoard[row][col].nearbyMines = count
           }
-          countedBoard[row][col].nearbyMines = count
         }
       }
-    }
-    return countedBoard
-  }, [])
+      return countedBoard
+    },
+    [size],
+  )
 
-  const handleCellClick = useCallback((row: number, col: number): void => {
-    if (gameState !== 'playing') return
+  const revealEmptyCells = useCallback(
+    (board: Board, startRow: number, startCol: number): Board => {
+      const newBoard = board.map((row) => row.map((cell) => ({ ...cell })))
+      const cellsToReveal: [number, number][] = [[startRow, startCol]]
 
-    setBoard((prevBoard) => {
-      const newBoard: Board = prevBoard.map((row) =>
-        row.map((cell) => ({ ...cell })),
-      )
-      const cell = newBoard[row][col]
+      while (cellsToReveal.length > 0) {
+        const currentCell = cellsToReveal.pop()
 
-      if (cell.isFlagged || cell.isRevealed) return prevBoard
+        if (!currentCell) continue
 
-      if (cell.isMine) {
-        for (let row = 0; row < size; row++) {
-          for (let col = 0; col < size; col++) {
-            if (newBoard[row][col].isMine) {
-              newBoard[row][col].isRevealed = true
+        const [currentRow, currentCol] = currentCell
+
+        if (
+          currentRow < 0 ||
+          currentRow >= size ||
+          currentCol < 0 ||
+          currentCol >= size
+        ) {
+          continue
+        }
+
+        const cell = newBoard[currentRow][currentCol]
+        if (cell.isRevealed || cell.isFlagged || cell.isMine) {
+          continue
+        }
+
+        cell.isRevealed = true
+
+        if (cell.nearbyMines === 0) {
+          for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+              cellsToReveal.push([currentRow + i, currentCol + j])
             }
           }
         }
-        setGameState('lost')
-        return newBoard
       }
-
-      newBoard[row][col].isRevealed = true
-
       return newBoard
-    })
-  }, [])
+    },
+    [size],
+  )
+
+  const handleCellClick = useCallback(
+    (row: number, col: number): void => {
+      if (gameState !== 'playing') return
+
+      setBoard((prevBoard) => {
+        const cell = prevBoard[row][col]
+
+        if (cell.isFlagged || cell.isRevealed) return prevBoard
+
+        let newBoard: Board
+
+        if (firstClick) {
+          setFirstClick(false)
+          const minedBoard = placeMines(prevBoard, row, col)
+          const countedBoard = countNearbyMines(minedBoard)
+          newBoard = revealEmptyCells(countedBoard, row, col)
+        } else {
+          newBoard = prevBoard.map((row) => row.map((cell) => ({ ...cell })))
+          if (cell.isMine) {
+            for (let row = 0; row < size; row++) {
+              for (let col = 0; col < size; col++) {
+                if (newBoard[row][col].isMine) {
+                  newBoard[row][col].isRevealed = true
+                }
+              }
+            }
+            setGameState('lost')
+            return newBoard
+          }
+
+          newBoard = revealEmptyCells(newBoard, row, col)
+        }
+        return newBoard
+      })
+    },
+    [
+      firstClick,
+      gameState,
+      size,
+      placeMines,
+      countNearbyMines,
+      revealEmptyCells,
+    ],
+  )
 
   return (
     <div
