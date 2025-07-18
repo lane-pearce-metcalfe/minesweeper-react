@@ -209,7 +209,8 @@ export default function Board({
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${size}, 1fr)`,
+        gridTemplateColumns: `repeat(${size}, minmax(40px, 1fr))`,
+        gridTemplateRows: `repeat(${size}, minmax(40px, 1fr))`,
         height: '60vh',
         aspectRatio: '1/1',
       }}
