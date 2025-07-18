@@ -43,10 +43,18 @@ export function Cell({
         fontWeight: 'bold',
         fontSize: '1.6rem',
         boxSizing: 'border-box',
-        borderBottom: '3px solid black',
-        borderRight: '3px solid black',
-        borderTop: '3px solid white',
-        borderLeft: '3px solid white',
+        borderBottom: !cell.isRevealed
+          ? '3px solid black'
+          : '1px solid rgba(0, 0, 0, 0.5)',
+        borderRight: !cell.isRevealed
+          ? '3px solid black'
+          : '1px solid rgba(0, 0, 0, 0.5)',
+        borderTop: !cell.isRevealed
+          ? '3px solid white'
+          : '1px solid rgba(0, 0, 0, 0.5)',
+        borderLeft: !cell.isRevealed
+          ? '3px solid white'
+          : '1px solid rgba(0, 0, 0, 0.5)',
         cursor: 'pointer',
       }}
     >
