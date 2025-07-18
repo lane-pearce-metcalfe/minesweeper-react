@@ -3,9 +3,11 @@ import { CellData } from './Board'
 export function Cell({
   cell,
   onClick,
+  onRightClick,
 }: {
   cell: CellData
   onClick: () => void
+  onRightClick: (e: React.MouseEvent<HTMLDivElement>) => void
 }) {
   const colors = [
     'blue',
@@ -34,6 +36,7 @@ export function Cell({
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       onClick={onClick}
+      onContextMenu={onRightClick}
       style={{
         backgroundColor: backgroundColor,
         color: colors[cell.nearbyMines - 1],
@@ -58,7 +61,9 @@ export function Cell({
         cursor: 'pointer',
       }}
     >
-      {!cell.isRevealed || cell.nearbyMines === 0 ? null : !cell.isMine ? (
+      {cell.isFlagged ? (
+        <p>🚩</p>
+      ) : !cell.isRevealed || cell.nearbyMines === 0 ? null : !cell.isMine ? (
         <p style={{ margin: '0' }}>{cell.nearbyMines}</p>
       ) : (
         <img

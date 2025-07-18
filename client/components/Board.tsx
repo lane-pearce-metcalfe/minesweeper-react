@@ -205,6 +205,26 @@ export default function Board({
     ],
   )
 
+  const handleRightClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>, row: number, col: number): void => {
+      e.preventDefault()
+      if (gameState !== 'playing') return
+      setBoard((prevBoard) => {
+        const newBoard: Board = prevBoard.map((row) =>
+          row.map((cell) => ({ ...cell })),
+        )
+        const cell = newBoard[row][col]
+
+        if (cell.isRevealed) return prevBoard
+
+        cell.isFlagged ? (cell.isFlagged = false) : (cell.isFlagged = true)
+
+        return newBoard
+      })
+    },
+    [gameState],
+  )
+
   return (
     <div
       style={{
@@ -222,6 +242,7 @@ export default function Board({
               cell={cell}
               key={`${i}-${j}`}
               onClick={() => handleCellClick(i, j)}
+              onRightClick={(e) => handleRightClick(e, i, j)}
             />
           )
         })
