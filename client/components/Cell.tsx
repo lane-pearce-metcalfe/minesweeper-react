@@ -17,12 +17,25 @@ export function Cell({
     'purple',
     'black',
   ]
+
+  function getBackgroundColor() {
+    if (cell.isRevealed) {
+      if (cell.isMine) {
+        return '#ff6b6b'
+      }
+      return cell.nearbyMines === 0 ? 'white' : '#e9ecef'
+    }
+    return cell.isFlagged ? '#ffd43b' : '#c0c0c0'
+  }
+
+  const backgroundColor = getBackgroundColor()
+
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       onClick={onClick}
       style={{
-        backgroundColor: 'lightgray',
+        backgroundColor: backgroundColor,
         color: colors[cell.nearbyMines - 1],
         display: 'flex',
         justifyContent: 'center',
