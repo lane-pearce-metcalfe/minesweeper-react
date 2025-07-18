@@ -181,7 +181,10 @@ export default function Board({
           if (cell.isMine) {
             for (let row = 0; row < size; row++) {
               for (let col = 0; col < size; col++) {
-                if (newBoard[row][col].isMine) {
+                if (
+                  newBoard[row][col].isMine &&
+                  !newBoard[row][col].isFlagged
+                ) {
                   newBoard[row][col].isRevealed = true
                 }
               }
