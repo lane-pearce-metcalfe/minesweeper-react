@@ -27,7 +27,7 @@ export function Cell({
       }
       return cell.nearbyMines === 0 ? 'white' : '#e9ecef'
     }
-    return cell.isFlagged ? '#ffd43b' : '#c0c0c0'
+    return '#c0c0c0'
   }
 
   const backgroundColor = getBackgroundColor()
