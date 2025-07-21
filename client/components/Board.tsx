@@ -263,7 +263,7 @@ export default function Board({
     const newBoard = board.map((row) => row.map((cell) => ({ ...cell })))
     for (let row = 0; row < size; row++) {
       for (let col = 0; col < size; col++) {
-        newBoard[row][col].isRevealed = true
+        if (!newBoard[row][col].isMine) newBoard[row][col].isRevealed = true
       }
     }
     return newBoard
