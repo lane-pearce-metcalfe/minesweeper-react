@@ -194,6 +194,10 @@ export default function Board({
           }
 
           newBoard = revealEmptyCells(newBoard, row, col)
+
+          if (checkWin(newBoard)) {
+            setGameState('won')
+          }
         }
         return newBoard
       })
@@ -221,11 +225,36 @@ export default function Board({
         if (cell.isRevealed) return prevBoard
 
         cell.isFlagged ? (cell.isFlagged = false) : (cell.isFlagged = true)
-
+        if (checkWin(newBoard)) {
+          setGameState('won')
+        }
         return newBoard
       })
     },
     [gameState],
+  )
+
+  const checkWin = useCallback(
+    (board: Board): boolean => {
+      let allRevealed: boolean = true
+      let count: number = 0
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+          const cell = board[row][col]
+          if (!cell.isMine && !cell.isRevealed) {
+            allRevealed = false
+          }
+          if (cell.isMine && cell.isFlagged) {
+            count++
+          }
+        }
+      }
+      if (count === mines) {
+        return true
+      }
+      return allRevealed
+    },
+    [mines, size],
   )
 
   return (
