@@ -197,6 +197,7 @@ export default function Board({
 
           if (checkWin(newBoard)) {
             setGameState('won')
+            setBoard(revealAllCells(newBoard))
           }
         }
         return newBoard
@@ -227,6 +228,7 @@ export default function Board({
         cell.isFlagged ? (cell.isFlagged = false) : (cell.isFlagged = true)
         if (checkWin(newBoard)) {
           setGameState('won')
+          setBoard(revealAllCells(newBoard))
         }
         return newBoard
       })
@@ -256,6 +258,16 @@ export default function Board({
     },
     [mines, size],
   )
+
+  const revealAllCells = useCallback((board: Board): Board => {
+    const newBoard = board.map((row) => row.map((cell) => ({ ...cell })))
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
+        newBoard[row][col].isRevealed = true
+      }
+    }
+    return newBoard
+  }, [])
 
   return (
     <div
