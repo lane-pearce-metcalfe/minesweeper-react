@@ -6,6 +6,7 @@ import {
   handleCellClickLogic,
   handleRightClickLogic,
 } from './src/clickHandlers'
+import '../main.css'
 
 export default function Board({
   size,
@@ -80,6 +81,15 @@ export default function Board({
         aspectRatio: '1/1',
       }}
     >
+      {gameState === 'won' ? (
+        <div className="endScreen">
+          <h1>You won!</h1>
+        </div>
+      ) : gameState === 'lost' ? (
+        <div className="endScreen">
+          <h1>You lost...</h1>
+        </div>
+      ) : null}
       {board.map((row, i) => {
         return row.map((cell, j) => {
           return (

@@ -3,3 +3,17 @@ body {
   color: #0a1520;
   font-family: 'Poppins', sans-serif;
 }
+
+.endScreen {
+  position: absolute;
+  top: 10vh;
+  left: 10vw;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.endScreen h1 {
+  margin: 0;
+}
