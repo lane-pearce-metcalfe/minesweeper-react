@@ -29,6 +29,12 @@ export default function Board({
     setGameState('playing')
   }, [size, createBoard])
 
+  const restartGame = useCallback(() => {
+    setBoard(createBoard())
+    setFirstClick(true)
+    setGameState('playing')
+  }, [createBoard])
+
   const handleCellClick = useCallback(
     (row: number, col: number): void => {
       setBoard((prevBoard) => {
@@ -84,10 +90,12 @@ export default function Board({
       {gameState === 'won' ? (
         <div className="endScreen">
           <h1>You won!</h1>
+          <button onClick={restartGame}>Restart</button>
         </div>
       ) : gameState === 'lost' ? (
         <div className="endScreen">
           <h1>You lost...</h1>
+          <button onClick={restartGame}>Restart</button>
         </div>
       ) : null}
       {board.map((row, i) => {
