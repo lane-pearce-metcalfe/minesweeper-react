@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Cell } from './Cell'
 import { Board as BoardType, GameState } from './src/types'
 import { createEmptyBoard } from './src/boardUtils'
 import {
+  handleBothClickLogic,
   handleCellClickLogic,
   handleRightClickLogic,
 } from './src/clickHandlers'
@@ -77,6 +78,26 @@ export default function Board({
     [gameState, size, mines],
   )
 
+  const handleBothClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>, row: number, col: number): void => {
+      e.preventDefault()
+
+      setBoard((prevBoard) => {
+        const result = handleBothClickLogic(
+          prevBoard,
+          row,
+          col,
+          gameState,
+          size,
+          mines,
+        )
+        setGameState(result.newGameState)
+        return result.newBoard
+      })
+    },
+    [gameState, size, mines],
+  )
+
   return (
     <div
       style={{
@@ -106,6 +127,7 @@ export default function Board({
               key={`${i}-${j}`}
               onClick={() => handleCellClick(i, j)}
               onRightClick={(e) => handleRightClick(e, i, j)}
+              onBothClick={(e) => handleBothClick(e, i, j)}
             />
           )
         })
