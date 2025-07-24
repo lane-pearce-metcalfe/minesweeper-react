@@ -112,6 +112,12 @@ export function handleBothClickLogic(
     return { newBoard: board, newGameState: gameState }
   }
 
+  const clickedCell = board[row][col]
+
+  if (!clickedCell.isRevealed || clickedCell.nearbyMines === 0) {
+    return { newBoard: board, newGameState: gameState }
+  }
+
   const newBoard: Board = board.map((row) => row.map((cell) => ({ ...cell })))
 
   for (let i = -1; i <= 1; i++) {
