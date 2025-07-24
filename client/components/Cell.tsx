@@ -1,13 +1,15 @@
-import { CellData } from './Board'
+import { CellData } from './src/types'
 
 export function Cell({
   cell,
   onClick,
   onRightClick,
+  onBothClick,
 }: {
   cell: CellData
   onClick: () => void
   onRightClick: (e: React.MouseEvent<HTMLDivElement>) => void
+  onBothClick: (e: React.MouseEvent<HTMLDivElement>) => void
 }) {
   const colors = [
     'blue',
@@ -19,6 +21,42 @@ export function Cell({
     'purple',
     'black',
   ]
+
+  let leftPressed = false
+  let rightPressed = false
+
+  function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
+    e.preventDefault()
+
+    if (e.button === 0) {
+      leftPressed = true
+    } else if (e.button === 2) {
+      rightPressed = true
+    }
+
+    if (e.buttons === 3) {
+      onBothClick(e)
+      return
+    }
+  }
+
+  function handleMouseUp(e: React.MouseEvent<HTMLDivElement>) {
+    if (e.button === 0) {
+      leftPressed = false
+      if (!rightPressed) {
+        onClick()
+      }
+    } else if (e.button === 2) {
+      rightPressed = false
+    }
+  }
+
+  function handleContextMenu(e: React.MouseEvent<HTMLDivElement>) {
+    e.preventDefault()
+    if (!leftPressed) {
+      onRightClick(e)
+    }
+  }
 
   function getBackgroundColor() {
     if (cell.isRevealed) {
@@ -33,10 +71,11 @@ export function Cell({
   const backgroundColor = getBackgroundColor()
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
-      onClick={onClick}
-      onContextMenu={onRightClick}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onContextMenu={handleContextMenu}
       style={{
         backgroundColor: backgroundColor,
         color: colors[cell.nearbyMines - 1],
@@ -59,6 +98,7 @@ export function Cell({
           ? '3px solid white'
           : '1px solid rgba(0, 0, 0, 0.5)',
         cursor: 'pointer',
+        userSelect: 'none',
       }}
     >
       {cell.isFlagged ? (
