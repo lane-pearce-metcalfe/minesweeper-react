@@ -1,4 +1,5 @@
 import { CellData } from './src/types'
+import '../styles/cell.css'
 
 export function Cell({
   cell,
