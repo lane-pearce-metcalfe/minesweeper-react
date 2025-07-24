@@ -7,7 +7,7 @@ import {
   handleCellClickLogic,
   handleRightClickLogic,
 } from './src/clickHandlers'
-import '../main.css'
+import '../styles/main.css'
 
 export default function Board({
   size,
