@@ -59,17 +59,29 @@ export function Cell({
     }
   }
 
-  function getBackgroundColor() {
-    if (cell.isRevealed) {
-      if (cell.isMine) {
-        return '#ff6b6b'
-      }
-      return cell.nearbyMines === 0 ? 'white' : '#e9ecef'
-    }
-    return '#c0c0c0'
-  }
+  function getCellClasses() {
+    const classes = ['cell']
 
-  const backgroundColor = getBackgroundColor()
+    if (cell.isRevealed) {
+      classes.push('revealed')
+
+      if (cell.isMine) {
+        classes.push('mine')
+      } else if (cell.nearbyMines === 0) {
+        classes.push('empty')
+      } else {
+        classes.push('number')
+      }
+    } else {
+      classes.push('unrevealed')
+    }
+
+    if (cell.isFlagged) {
+      classes.push('flagged')
+    }
+
+    return classes.join(' ')
+  }
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -78,29 +90,9 @@ export function Cell({
       onMouseUp={handleMouseUp}
       onContextMenu={handleContextMenu}
       style={{
-        backgroundColor: backgroundColor,
-        color: colors[cell.nearbyMines - 1],
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontWeight: 'bold',
-        fontSize: '1.6rem',
-        boxSizing: 'border-box',
-        borderBottom: !cell.isRevealed
-          ? '3px solid black'
-          : '1px solid rgba(0, 0, 0, 0.5)',
-        borderRight: !cell.isRevealed
-          ? '3px solid black'
-          : '1px solid rgba(0, 0, 0, 0.5)',
-        borderTop: !cell.isRevealed
-          ? '3px solid white'
-          : '1px solid rgba(0, 0, 0, 0.5)',
-        borderLeft: !cell.isRevealed
-          ? '3px solid white'
-          : '1px solid rgba(0, 0, 0, 0.5)',
-        cursor: 'pointer',
-        userSelect: 'none',
+        color: cell.nearbyMines > 0 ? colors[cell.nearbyMines - 1] : undefined,
       }}
+      className={getCellClasses()}
     >
       {cell.isFlagged ? (
         <p>🚩</p>

@@ -1,0 +1,51 @@
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.6rem;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.05s ease;
+}
+
+.cell.unrevealed {
+  background-color: #c0c0c0;
+  border-bottom: 3px solid #808080;
+  border-right: 3px solid #808080;
+  border-top: 3px solid #ffffff;
+  border-left: 3px solid #ffffff;
+}
+
+.cell.unrevealed:hover {
+  background-color: #d0d0d0;
+}
+
+.cell.unrevealed:active {
+  border-bottom: 1px solid #808080;
+  border-right: 1px solid #808080;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  background-color: #b0b0b0;
+}
+
+.cell.revealed {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.cell.revealed.empty {
+  background-color: #ffffff;
+}
+
+.cell.revealed.number {
+  background-color: #e9ecef;
+}
+
+.cell.revealed.mine {
+  background-color: #ff6b6b;
+}
+
+.cell.flagged {
+  background-color: #c0c0c0;
+}
