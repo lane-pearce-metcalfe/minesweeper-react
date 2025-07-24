@@ -99,3 +99,36 @@ export function handleRightClickLogic(
 
   return { newBoard, newGameState }
 }
+
+export function handleRightClickLogic(
+  board: Board,
+  row: number,
+  col: number,
+  gameState: GameState,
+  size: number,
+  mines: number,
+): {
+  newBoard: Board
+  newGameState: GameState
+} {
+  if (gameState !== 'playing') {
+    return { newBoard: board, newGameState: gameState }
+  }
+
+  const newBoard: Board = board.map((row) => row.map((cell) => ({ ...cell })))
+  const cell = newBoard[row][col]
+
+  if (cell.isRevealed) {
+    return { newBoard: board, newGameState: gameState }
+  }
+
+  cell.isFlagged = !cell.isFlagged
+
+  let newGameState: GameState = gameState
+  if (checkWin(newBoard, size, mines)) {
+    newGameState = 'won'
+    return { newBoard: revealAllCells(newBoard, size), newGameState }
+  }
+
+  return { newBoard, newGameState }
+}
