@@ -118,19 +118,76 @@ export function handleBothClickLogic(
     return { newBoard: board, newGameState: gameState }
   }
 
-  const newBoard: Board = board.map((row) => row.map((cell) => ({ ...cell })))
-
+  let flagCount = 0
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
-      if (i > 0 && i <= size && j > 0 && j <= size) {
-        newBoard[row + i][col + j].isRevealed = true
+      const checkRow = row + i
+      const checkCol = col + j
+      if (
+        checkRow >= 0 &&
+        checkRow < size &&
+        checkCol >= 0 &&
+        checkCol < size
+      ) {
+        if (board[checkRow][checkCol].isFlagged) {
+          flagCount++
+        }
       }
     }
   }
 
-  if (checkWin(newBoard, size, mines)) {
-    return { newBoard: newBoard, newGameState: 'won' }
+  if (flagCount !== clickedCell.nearbyMines) {
+    return { newBoard: board, newGameState: gameState }
   }
 
-  return { newBoard: newBoard, newGameState: gameState }
+  const newBoard: Board = board.map((row) => row.map((cell) => ({ ...cell })))
+  let hitMine = false
+
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      const checkRow = row + i
+      const checkCol = col + j
+
+      if (
+        checkRow >= 0 &&
+        checkRow < size &&
+        checkCol >= 0 &&
+        checkCol < size
+      ) {
+        const cell = newBoard[checkRow][checkCol]
+        if (!cell.isRevealed && !cell.isFlagged) {
+          if (cell.isMine) {
+            hitMine = true
+            cell.isRevealed = true
+          } else {
+            const tempBoard = revealEmptyCells(
+              newBoard,
+              checkRow,
+              checkCol,
+              size,
+            )
+            for (let r = 0; r < size; r++) {
+              for (let c = 0; c < size; c++) {
+                if (tempBoard[r][c].isRevealed && !newBoard[r][c].isRevealed) {
+                  newBoard[r][c].isRevealed = true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (hitMine) {
+    const finalBoard = revealAllMines(newBoard, size)
+    return { newBoard: finalBoard, newGameState: 'lost' }
+  }
+
+  if (checkWin(newBoard, size, mines)) {
+    const finalBoard = revealAllCells(newBoard, size)
+    return { newBoard: finalBoard, newGameState: 'won' }
+  }
+
+  return { newBoard, newGameState: gameState }
 }
