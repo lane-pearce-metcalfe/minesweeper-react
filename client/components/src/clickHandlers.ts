@@ -100,35 +100,31 @@ export function handleRightClickLogic(
   return { newBoard, newGameState }
 }
 
-export function handleRightClickLogic(
+export function handleBothClickLogic(
   board: Board,
   row: number,
   col: number,
   gameState: GameState,
   size: number,
   mines: number,
-): {
-  newBoard: Board
-  newGameState: GameState
-} {
+): { newBoard: Board; newGameState: GameState } {
   if (gameState !== 'playing') {
     return { newBoard: board, newGameState: gameState }
   }
 
   const newBoard: Board = board.map((row) => row.map((cell) => ({ ...cell })))
-  const cell = newBoard[row][col]
 
-  if (cell.isRevealed) {
-    return { newBoard: board, newGameState: gameState }
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      if (i > 0 && i <= size && j > 0 && j <= size) {
+        newBoard[row + i][col + j].isRevealed = true
+      }
+    }
   }
 
-  cell.isFlagged = !cell.isFlagged
-
-  let newGameState: GameState = gameState
   if (checkWin(newBoard, size, mines)) {
-    newGameState = 'won'
-    return { newBoard: revealAllCells(newBoard, size), newGameState }
+    return { newBoard: newBoard, newGameState: 'won' }
   }
 
-  return { newBoard, newGameState }
+  return { newBoard: newBoard, newGameState: gameState }
 }
