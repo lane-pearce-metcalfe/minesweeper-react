@@ -99,11 +99,7 @@ export function Cell({
       ) : !cell.isRevealed || cell.nearbyMines === 0 ? null : !cell.isMine ? (
         <p style={{ margin: '0' }}>{cell.nearbyMines}</p>
       ) : (
-        <img
-          src="client/images/bomb.png"
-          alt="minesweeper bomb"
-          style={{ width: '80%' }}
-        />
+        <p>💣</p>
       )}
     </div>
   )
